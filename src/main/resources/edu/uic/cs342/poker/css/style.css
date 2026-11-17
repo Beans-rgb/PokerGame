@@ -1,3 +1,4 @@
+
 .welcome-root {
     -fx-background-color: #f5f7fa;
 }
@@ -10,4 +11,64 @@
 .button {
     -fx-font-size: 14px;
     -fx-padding: 8px 20px;
+}
+
+.poker-root {
+    -fx-background-color: #155C43;
+    -fx-font-family: "Segoe UI";
+}
+
+.poker-root .label {
+    -fx-text-fill: white;
+}
+
+.poker-root .table-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F4D28A;
+}
+
+.poker-root .section-heading {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.poker-root .playing-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #D5DCE2;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+}
+
+.poker-root .red-card {
+    -fx-text-fill: #C62828;
+}
+
+.poker-root .black-card {
+    -fx-text-fill: #111827;
+}
+
+.poker-root .card-back {
+    -fx-background-color: #183F70;
+    -fx-background-radius: 10;
+    -fx-border-color: #E2BD70;
+    -fx-border-width: 3;
+    -fx-border-radius: 10;
+    -fx-text-fill: white;
+    -fx-font-size: 40px;
+}
+
+.poker-root .status-label {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+}
+
+.poker-root .total-profit {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F4D28A;
 }

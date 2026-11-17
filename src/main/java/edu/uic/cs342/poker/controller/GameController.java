@@ -1,11 +1,16 @@
 
 package edu.uic.cs342.poker.controller;
 
+import edu.uic.cs342.poker.Card;
 import edu.uic.cs342.poker.GameService;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+
+import java.util.ArrayList;
 
 public class GameController {
 
@@ -14,8 +19,9 @@ public class GameController {
     @FXML private TextField anteField;
     @FXML private TextField pairPlusField;
 
-    @FXML private Label playerCardsLabel;
-    @FXML private Label dealerCardsLabel;
+    @FXML private HBox playerCardsBox;
+    @FXML private HBox dealerCardsBox;
+
     @FXML private Label resultLabel;
     @FXML private Label profitLabel;
     @FXML private Label totalProfitLabel;
@@ -30,8 +36,9 @@ public class GameController {
         playButton.setDisable(true);
         foldButton.setDisable(true);
 
-        playerCardsLabel.setText("No cards dealt");
-        dealerCardsLabel.setText("Dealer cards hidden");
+        showMessage(playerCardsBox, "No cards dealt");
+        showMessage(dealerCardsBox, "Dealer cards hidden");
+
         resultLabel.setText("Enter your bets to begin");
         profitLabel.setText("");
         totalProfitLabel.setText("Total Profit: 0");
@@ -41,15 +48,15 @@ public class GameController {
     private void handleStartRound() {
         try {
             int ante = Integer.parseInt(anteField.getText().trim());
-            int pairPlus = Integer.parseInt(pairPlusField.getText().trim());
+
+            String pairText = pairPlusField.getText().trim();
+            int pairPlus = pairText.isEmpty() ? 0 : Integer.parseInt(pairText);
 
             game.startRound(ante, pairPlus);
 
-            playerCardsLabel.setText(
-                    "Your Cards: " + game.getPlayerHand()
-            );
+            showCards(playerCardsBox, game.getPlayerHand());
+            showCardBacks(dealerCardsBox);
 
-            dealerCardsLabel.setText("Dealer cards hidden");
             resultLabel.setText("Choose Play or Fold");
             profitLabel.setText("");
 
@@ -75,9 +82,7 @@ public class GameController {
     private void finishRound(boolean play) {
         GameService.RoundResult result = game.finishRound(play);
 
-        dealerCardsLabel.setText(
-                "Dealer Cards: " + result.dealerHand()
-        );
+        showCards(dealerCardsBox, result.dealerHand());
 
         resultLabel.setText(result.outcome());
 
@@ -92,5 +97,63 @@ public class GameController {
         startRoundButton.setDisable(false);
         playButton.setDisable(true);
         foldButton.setDisable(true);
+    }
+
+    private void showCards(HBox box, ArrayList<Card> cards) {
+        box.getChildren().clear();
+
+        for (Card card : cards) {
+            String rank = switch (card.value()) {
+                case 11 -> "J";
+                case 12 -> "Q";
+                case 13 -> "K";
+                case 14 -> "A";
+                default -> String.valueOf(card.value());
+            };
+
+            String suit = switch (card.suit()) {
+                case "Hearts" -> "♥";
+                case "Diamonds" -> "♦";
+                case "Clubs" -> "♣";
+                case "Spades" -> "♠";
+                default -> "?";
+            };
+
+            Label cardLabel = new Label(rank + "\n" + suit);
+
+            cardLabel.setAlignment(Pos.CENTER);
+            cardLabel.setMinSize(85, 115);
+            cardLabel.setPrefSize(85, 115);
+
+            cardLabel.getStyleClass().add("playing-card");
+
+            if (suit.equals("♥") || suit.equals("♦")) {
+                cardLabel.getStyleClass().add("red-card");
+            } else {
+                cardLabel.getStyleClass().add("black-card");
+            }
+
+            box.getChildren().add(cardLabel);
+        }
+    }
+
+    private void showCardBacks(HBox box) {
+        box.getChildren().clear();
+
+        for (int i = 0; i < 3; i++) {
+            Label cardBack = new Label("♠");
+
+            cardBack.setAlignment(Pos.CENTER);
+            cardBack.setMinSize(85, 115);
+            cardBack.setPrefSize(85, 115);
+
+            cardBack.getStyleClass().add("card-back");
+            box.getChildren().add(cardBack);
+        }
+    }
+
+    private void showMessage(HBox box, String message) {
+        box.getChildren().clear();
+        box.getChildren().add(new Label(message));
     }
 }
